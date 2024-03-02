@@ -1,0 +1,22 @@
+#main{
+  background-color: #d9d9e1;
+}
+  .form{
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 12px 40px 0 rgba(0, 0, 0, 0.19);
+    background-color: white;
+  }
+  .error{
+color: red;
+  }
+
+  @media screen and (max-width:797px){
+  .form{
+    margin: 0px !important;
+    padding: 0px !important;
+    width: 100% !important;
+    
+  }
+  }
+  

@@ -1,0 +1,27 @@
+.sec3_content1 {
+  border-radius: 30px;
+  box-shadow: 2px 2px 2px 2px rgb(229, 227, 227);
+}
+
+.img{
+  max-width: 500px;
+  max-height: 350px;
+}
+
+.section2 {
+  animation: slideInUp 2s;
+}
+
+.section3 {
+  animation: fadeInBottomRight 2s;
+}
+
+.section4 {
+  animation: fadeInBottomLeft 3s;
+}
+
+@media screen and (max-width:767px) {
+  .img {
+    display: none;
+  }
+}
