@@ -44,49 +44,44 @@ function userLogout()
 
 <body>
     <?php include "../assets/imports/navigation.php"; ?>
-    <div class="pagebody">
-        <title>
-            <?php echo $page_title ?>
-        </title>
-        <div class="content" id="user_details">
-            <table>
-                <thead>
-                    <tr>
-                        <th colspan="2">
-                            Account Page
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Username:</td>
-                        <td>
+    <title>
+        <?php echo $page_title ?>
+    </title>
+    <main class="main">
+        <section class="">
+            <div class="container-fluid">
+                <div class="panner mx-5 my-3">
+                    <div class="row justify-content-center">
+                        <h5 class="p-2 col-12 UserName"><strong>Username :</strong>
                             <?php echo $user_results['UserName']; ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Email:</td>
-                        <td>
+                        </h5>
+                        <h5 class="p-2 col-12 UserEmail"><strong>Email :</strong>
                             <?php echo $user_results['UserEmail']; ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Phone Number:</td>
-                        <td>
+                        </h5>
+                        <h5 class="p-2 col-12 UserPhone"><strong>Phone Number :</strong>
                             <?php echo $user_results['UserPhone']; ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <form action="index.php" method="post">
-                                <input type="submit" name="logout" value="Logout">
-                            </form>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+                        </h5>
+                        <h5 class="p-2 col-12 UserPhone"><strong>Level :</strong>
+                            <?php echo $user_results['UserAccess']; ?>
+                        </h5>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <form action="index.php" method="post" class="col-12">
+                        <input type="submit" class="mx-5 my-2 logout" name="logout" value="Logout">
+                        <input type="button" class="EditInfo" name="logout" value="Edit Info">
+                    </form>
+                </div>
+                <div class="logOut">
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+
+
     <?php include "../assets/imports/footer.php"; ?>
 </body>
 
