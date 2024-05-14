@@ -1,6 +1,143 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+
+require '../../PHPMailer/src/Exception.php';
+require '../../PHPMailer/src/PHPMailer.php';
+require '../../PHPMailer/src/SMTP.php';
+require "../../assets/imports/dbConfig.php";
+require_once '../../assets/imports/FileUtilities.php';
+
+
+
 $page_title = 'Register';
+
+
+
+if (isset($_COOKIE["loggedin"])) {
+    $user_cookies = $_COOKIE["loggedin"];
+    $user_query = mysqli_prepare($connection, "SELECT * FROM users WHERE UserPassword = ?");
+    mysqli_stmt_bind_param($user_query, "s", $user_cookies);
+    mysqli_stmt_execute($user_query);
+    $user_results = mysqli_fetch_assoc(mysqli_stmt_get_result($user_query));
+    if ($user_cookies == $user_results["UserPassword"]) {
+        header('location: ../account');
+        exit();
+    }
+}
+
+
+
+
+
+if (isset($_POST["submit"])) {
+
+    $username = isset($_POST["username"]) ? trim($_POST["username"]) : "";
+    $userpassword = isset($_POST["userpassword"]) ? trim($_POST["userpassword"]) : "";
+    $confirmpassword = isset($_POST["confirmpassword"]) ? trim($_POST["confirmpassword"]) : "";
+    $useremail = isset($_POST["useremail"]) ? trim($_POST["useremail"]) : "";
+    $userphone = isset($_POST["userphone"]) ? trim($_POST["userphone"]) : "";
+    $useraccess = "Member";
+    $errors = [];
+
+    //create query
+    $user_query = mysqli_prepare($connection, "SELECT * FROM users WHERE UserEmail = ? OR UserName = ? OR UserPhone = ? OR UserPassword = ?");
+    mysqli_stmt_bind_param($user_query, "ssss", $useremail, $username, $userphone, $userpassword);
+    mysqli_stmt_execute($user_query);
+
+    //set the result set
+    $user_results = mysqli_stmt_get_result($user_query);
+
+    //Fetch the user data
+    $user_data = mysqli_fetch_assoc($user_results);
+
+    if (empty($username)) {
+        $errors["username"] = "Username cannot be empty";
+    } else if (strlen($username) > 10) {
+        $errors["username"] = "Username cannot be more than 10 characters";
+    } else if (!preg_match("/^[A-Za-z\s]+/", $username)) {
+        $errors["username"] = "At least one big lestter";
+    } else if ($user_data && $username == $user_data["UserName"]) {
+        $errors["username"] = "This username has been use, Try others";
+    }
+
+    if (empty($userpassword)) {
+        $errors["password"] = "Password cannot be blank!";
+    } else if (strlen($userpassword) < 8) {
+        $errors["password"] = "Password must at least 8 letters!";
+    } else if (!preg_match("/^[A-Z]/", $userpassword)) {
+        $errors["password"] = "At least one big letter";
+    } else if ($userpassword != $confirmpassword) {
+        $errors["password"] = "Confirm password not same !";
+    } else if ($user_data && $userpassword == $user_data["UserPassword"]) {
+        $errors["password"] = "This password has been use, Try others";
+    }
+
+
+    if (empty($confirmpassword)) {
+        $errors["confirmpassword"] = "Confirm password cannot be blank!";
+    } else if (strlen($confirmpassword) < 8) {
+        $errors["confirmpassword"] = "Confirm password must at least 8 letters!";
+    } else if ($userpassword != $confirmpassword) {
+        $errors["confirmpassword"] = "Confirm password not same !";
+    } else if ($user_data && $confirmpassword == $user_data["UserPassword"]) {
+        $errors["confirmpassword"] = "This password has been use, Try others";
+    }
+
+    if (empty($useremail)) {
+        $errors["email"] = "Email cannot be blank!";
+    } else if ($user_data && $useremail == $user_data["UserEmail"]) {
+        $errors["email"] = "This Email has been use, Try others";
+    }
+
+    if (empty($userphone)) {
+        $errors["phone"] = "Mobile phone cannot be empty";
+    } else if (!preg_match("/^01[0-9]{1}-[0-9]{7}$/", $userphone)) {
+        $errors["phone"] = "Mobile phone must follow format: [01x-xxxxxxx]";
+    } else if ($user_data && $userphone == $user_data["UserPhone"]) {
+        $errors["phone"] = "This Phone number has been use, Try others";
+    }
+
+
+    if (empty($errors)) {
+
+        function generateOTP($length = 6)
+        {
+            $otp = '';
+            for ($i = 0; $i < $length; $i++) {
+                $otp .= random_int(0, 9);
+            }
+            return $otp;
+        }
+
+        function sendOTP($useremail, $otp)
+        {
+            $comment = " This is your OTP code :" . $otp;
+
+            mail($useremail, "OTP", $comment);
+        }
+        // Generate OTP
+        $otp = generateOTP();
+
+        // Send OTP to email
+        sendOTP($useremail, $otp);
+
+        session_start();
+        $_SESSION['user_data'] = [
+            'username' => $username,
+            'email' => $useremail,
+            'password' => $userpassword,
+            'phone' => $userphone,
+            'userAccess' => $useraccess,
+            'otp' => $otp
+        ];
+        redirect('../register/verification.php');
+    }
+
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -8,7 +145,7 @@ $page_title = 'Register';
 <head>
 
     <?php include "../../assets/imports/header.php"; ?>
-    <?php include "../../assets/imports/dbConfig.php"; ?>
+
     <title>
         <?php echo $page_title ?>
     </title>
@@ -17,127 +154,6 @@ $page_title = 'Register';
 
 <body>
     <?php include "../../assets/imports/navigation.php"; ?>
-
-
-    <?php
-
-    if (isset($_COOKIE["loggedin"])) {
-        $user_cookies = $_COOKIE["loggedin"];
-        $user_query = mysqli_prepare($connection, "SELECT * FROM users WHERE UserPassword = ?");
-        mysqli_stmt_bind_param($user_query, "s", $user_cookies);
-        mysqli_stmt_execute($user_query);
-        $user_results = mysqli_fetch_assoc(mysqli_stmt_get_result($user_query));
-        if ($user_cookies == $user_results["UserPassword"]) {
-            header('location: ../account');
-            exit();
-        }
-    }
-
-
-
-
-
-    if (isset($_POST["submit"])) {
-
-        $username = isset($_POST["username"]) ? trim($_POST["username"]) : "";
-        $userpassword = isset($_POST["userpassword"]) ? trim($_POST["userpassword"]) : "";
-        $confirmpassword = isset($_POST["confirmpassword"]) ? trim($_POST["confirmpassword"]) : "";
-        $useremail = isset($_POST["useremail"]) ? trim($_POST["useremail"]) : "";
-        $userphone = isset($_POST["userphone"]) ? trim($_POST["userphone"]) : "";
-        $errors = [];
-
-        //create query
-        $user_query = mysqli_prepare($connection, "SELECT * FROM users WHERE UserEmail = ? OR UserName = ? OR UserPhone = ? OR UserPassword = ?");
-        mysqli_stmt_bind_param($user_query, "ssss", $useremail, $username, $userphone, $userpassword);
-        mysqli_stmt_execute($user_query);
-
-        //set the result set
-        $user_results = mysqli_stmt_get_result($user_query);
-
-        //Fetch the user data
-        $user_data = mysqli_fetch_assoc($user_results);
-
-        if (empty($username)) {
-            $errors["username"] = "Username cannot be empty";
-        } else if (strlen($username) > 10) {
-            $errors["username"] = "Username cannot be more than 10 characters";
-        } else if (!preg_match("/^[A-Za-z\s]+/", $username)) {
-            $errors["username"] = "At least one big lestter";
-        } else if ($user_data &&$username == $user_data["UserName"]) {
-            $errors["username"] = "This username has been use, Try others";
-        }
-
-        if (empty($userpassword)) {
-            $errors["password"] = "Password cannot be blank!";
-        } else if (strlen($userpassword) < 8) {
-            $errors["password"] = "Password must at least 8 letters!";
-        } else if (!preg_match("/^[A-Z]/", $userpassword)) {
-            $errors["password"] = "At least one big letter";
-        } else if ($userpassword != $confirmpassword) {
-            $errors["password"] = "Confirm password not same !";
-        } else if ($user_data && $userpassword == $user_data["UserPassword"]) {
-            $errors["password"] = "This password has been use, Try others";
-        }
-
-
-        if (empty($confirmpassword)) {
-            $errors["confirmpassword"] = "Confirm password cannot be blank!";
-        } else if (strlen($confirmpassword) < 8) {
-            $errors["confirmpassword"] = "Confirm password must at least 8 letters!";
-        }else if ($userpassword != $confirmpassword) {
-            $errors["confirmpassword"] = "Confirm password not same !";
-        } else if ($user_data &&$confirmpassword == $user_data["UserPassword"]) {
-            $errors["confirmpassword"] = "This password has been use, Try others";
-        }
-
-        if (empty($useremail)) {
-            $errors["email"] = "Email cannot be blank!";
-        } else if ($user_data &&$useremail == $user_data["UserEmail"]) {
-            $errors["email"] = "This Email has been use, Try others";
-        }
-
-        if (empty($userphone)) {
-            $errors["phone"] = "Mobile phone cannot be empty";
-        } else if (!preg_match("/^01[0-9]{1}-[0-9]{7}$/", $userphone)) {
-            $errors["phone"] = "Mobile phone must follow format: [01x-xxxxxxx]";
-        } else if ($user_data &&$userphone == $user_data["UserPhone"]) {
-            $errors["phone"] = "This Phone number has been use, Try others";
-        }
-
-
-
-        $useraccess = "Member";
-        // $pass_hash = password_hash($userpassword, PASSWORD_DEFAULT);
-    
-        // $duplicate_query = mysqli_prepare($connection, "SELECT * FROM users WHERE UserName = ? OR UserEmail = ?");
-        // mysqli_stmt_bind_param($duplicate_query, "ss", $username, $useremail);
-        // mysqli_stmt_execute($duplicate_query);
-        // $duplicate_result = mysqli_stmt_get_result($duplicate_query);
-    
-        // if (mysqli_num_rows($duplicate_result) > 0) {
-        //     echo "<div class='message'>Username or Email has been used!</div>";
-        // } else if ($userpassword == $confirmpassword) {
-        if (empty($errors)) {
-            $insert_query = mysqli_prepare($connection, "INSERT INTO users (UserName, UserPassword, UserEmail, UserPhone, UserAccess) VALUES (?, ?, ?, ?, ?)");
-            mysqli_stmt_bind_param($insert_query, "sssss", $username, $userpassword, $useremail, $userphone, $useraccess);
-            mysqli_stmt_execute($insert_query);
-            echo "<script>
-            alert('Account register successfully!'); 
-            window.location.href='../login';
-            </script>";
-            exit();
-
-        }
-        // } else {
-        //     echo "<div class='message'>Password not same!</div>";
-        // }
-    }
-
-    ?>
-
-
-
-
     <main class="">
         <section class="section">
             <div class="container-fluid">

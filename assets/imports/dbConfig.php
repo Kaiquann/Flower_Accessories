@@ -11,4 +11,6 @@ if (!$connection) {
     die("Can't connect to database");
 }
 
+
+
 ?>
