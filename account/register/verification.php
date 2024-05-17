@@ -82,7 +82,7 @@ if (isset($_COOKIE["loggedin"])) {
                             <input type="text" class="form-control" name="otp" id="otp" pattern="[0-9]{6}" maxlength="6"
                                 placeholder="xxxxxx" required>
                         </div>
-                        <input type="submit" class="" name="submit" id="submit" value="Verify" />
+                        <input type="submit" class="submitBtn w-50" name="submit" id="submit" value="Verify" />
                     </form>
                 </div>
             </div>
