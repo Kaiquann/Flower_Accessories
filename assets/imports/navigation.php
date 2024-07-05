@@ -40,7 +40,7 @@ echo ' </li>
     <li class="nav-item mx-5 p-2">';
 if ($page_title == 'Login' || $page_title == 'Register') {
   echo '<a class="nav-link" href="../../account/login">LOGIN</a>';
-} else if (isset($_COOKIE["loggedin"])) {
+} else if (isset($_COOKIE["userloggedin"])) {
   echo '<a class="nav-link" href="../account">ACCOUNT</a>';
 } else {
   echo '<a class="nav-link" href="../account/login">LOGIN</a>';

@@ -58,8 +58,6 @@ if (isset($_POST["submit"])) {
         $errors["username"] = "Username cannot be more than 10 characters";
     } else if (!preg_match("/^[A-Za-z\s]+/", $username)) {
         $errors["username"] = "At least one big lestter";
-    } else if ($user_data && $username == $user_data["UserName"]) {
-        $errors["username"] = "This username has been use, Try others";
     }
 
     if (empty($userpassword)) {
@@ -70,8 +68,6 @@ if (isset($_POST["submit"])) {
         $errors["password"] = "At least one big letter";
     } else if ($userpassword != $confirmpassword) {
         $errors["password"] = "Confirm password not same !";
-    } else if ($user_data && $userpassword == $user_data["UserPassword"]) {
-        $errors["password"] = "This password has been use, Try others";
     }
 
 

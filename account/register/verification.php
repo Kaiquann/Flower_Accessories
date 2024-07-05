@@ -25,7 +25,7 @@ if (isset($_POST["submit"])) {
 
     if ($_POST["otp"] == $otp) {
         $_SESSION['otp'] = $otp;
-        $insert_query = mysqli_prepare($connection, "INSERT INTO users (UserName, UserPassword, UserEmail, UserPhone, UserAccess) VALUES (?, ?, ?, ?, ?)");
+        $insert_query = mysqli_prepare($connection, "INSERT INTO users (USERNAME, USERPASSWORD, USEREMAIL, USERPHONE, USERACCESS) VALUES (?, ?, ?, ?, ?)");
         mysqli_stmt_bind_param($insert_query, "sssss", $username, $userpassword, $useremail, $userphone, $useraccess);
         mysqli_stmt_execute($insert_query);
         echo "<script>
@@ -34,7 +34,7 @@ if (isset($_POST["submit"])) {
                 </script>";
         exit();
     } else {
-        echo $otp;
+        echo "invalid otp";
     }
 
     // Store user data and OTP in session (or use a more persistent storage like a database)
@@ -82,7 +82,7 @@ if (isset($_COOKIE["loggedin"])) {
                             <input type="text" class="form-control" name="otp" id="otp" pattern="[0-9]{6}" maxlength="6"
                                 placeholder="xxxxxx" required>
                         </div>
-                        <input type="submit" class="submitBtn w-50" name="submit" id="submit" value="Verify" />
+                        <input type="submit" class="submitBtn w-25" name="submit" id="submit" value="Verify" />
                     </form>
                 </div>
             </div>

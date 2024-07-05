@@ -26,7 +26,6 @@ $page_title = "Main";
             <p class="my-xxl-4 content" style="font-size: 15px; color: rgb(133, 123, 120);"><strong>"Flowers are like friends,
                 they bring color to your world"<br>Our shop now have envent and promotion now!</strong></p>
             <a href="../Menu/"><button class="m-3 px-4 py-2 button" style="animation:pulse 1s infinite;"><strong>Shop now</strong></button></a>
-            <p>Testing github</p>
           </div>
         </div>
       </div>

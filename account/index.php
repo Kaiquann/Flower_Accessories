@@ -6,79 +6,96 @@ $page_title = 'Account';
 <html lang="en">
 
 <head>
-    <?php include "../assets/imports/header.php"; ?>
-    <?php include "../assets/imports/dbConfig.php"; ?>
+    <?php include "../assets/imports/header.php";
+    include "../assets/imports/dbConfig.php";
+    include '../assets/imports/FileUtilities.php';
+    ?>
 </head>
 
 <?php
 if (isset($_POST['logout'])) {
     userLogout();
-    return;
-}
-
-if (!isset($_COOKIE["loggedin"])) {
-    header('location:register.php');
     exit();
 }
 
-$user_cookies = $_COOKIE["loggedin"];
-$user_query = mysqli_prepare($connection, "SELECT * FROM users WHERE UserPassword = ?");
-mysqli_stmt_bind_param($user_query, "s", $user_cookies);
-mysqli_stmt_execute($user_query);
-$user_results = mysqli_fetch_assoc(mysqli_stmt_get_result($user_query));
-
-if ($user_cookies != $user_results["UserPassword"]) {
-    userLogout();
-    return;
-}
-
-function userLogout()
-{
-    setcookie("loggedin", "", 0, "/", "localhost", true, false);
-    header('location: ../account/login');
+if (!isset($_COOKIE["userloggedin"])) {
+    header('location:register');
     exit();
+} else {
+    $user_results = chkCookies($connection);
 }
 ?>
 
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
 
+    .profile-container {
+        margin-top: 50px;
+    }
+
+    .profile-card {
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+    }
+
+    .profile-header {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .profile-info {
+        font-size: 1.1rem;
+    }
+
+    .profile-info p {
+        margin-bottom: 15px;
+    }
+
+    .profile-info strong {
+        width: 150px;
+        display: inline-block;
+    }
+
+    .btn-custom {
+        margin-top: 20px;
+    }
+</style>
 
 <body>
+
     <?php include "../assets/imports/navigation.php"; ?>
     <title>
         <?php echo $page_title ?>
     </title>
-    <main class="main">
-        <section class="">
-            <div class="container-fluid">
-                <div class="panner mx-5 my-3">
-                    <div class="row justify-content-center">
-                        <h5 class="p-2 col-12 UserName"><strong>Username :</strong>
-                            <?php echo $user_results['UserName']; ?>
-                        </h5>
-                        <h5 class="p-2 col-12 UserEmail"><strong>Email :</strong>
-                            <?php echo $user_results['UserEmail']; ?>
-                        </h5>
-                        <h5 class="p-2 col-12 UserPhone"><strong>Phone Number :</strong>
-                            <?php echo $user_results['UserPhone']; ?>
-                        </h5>
-                        <h5 class="p-2 col-12 UserPhone"><strong>Level :</strong>
-                            <?php echo $user_results['UserAccess']; ?>
-                        </h5>
+    <div class="container profile-container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card profile-card">
+                    <div class="profile-header">
+                        User Profile
+                    </div>
+                    <div class="profile-info">
+                        <p><strong>Username:</strong> <?php echo $user_results["USERNAME"] ?></p>
+                        <p><strong>Email:</strong> <?php echo $user_results["USEREMAIL"] ?></p>
+                        <p><strong>Phone Number:</strong><?php echo $user_results["USERPHONE"] ?></p>
+                        <p><strong>User Level:</strong> <?php echo $user_results["USERACCESS"] ?></p>
+                    </div>
+                    <div class="text-center btn-custom">
+                        <a href="edit_profile.php" class="btn btn-primary">Edit Profile</a>
+                        <form action="index.php" method="POST">
+                            <button type="submit" class="btn btn-danger" name="logout" id="logout">Logout</button>
+                        </form>
                     </div>
                 </div>
-                <div class="row justify-content-center">
-                    <form action="index.php" method="post" class="col-12">
-                        <input type="submit" class="mx-5 my-2 logout" name="logout" value="Logout">
-                        <input type="button" class="EditInfo" name="logout" value="Edit Info">
-                    </form>
-                </div>
-                <div class="logOut">
-
-                </div>
             </div>
-        </section>
-    </main>
-
+        </div>
+    </div>
 
 
 

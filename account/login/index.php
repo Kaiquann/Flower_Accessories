@@ -58,10 +58,10 @@ if (isset($_COOKIE["loggedin"])) {
         $user_data = mysqli_fetch_assoc($user_results);
 
         //cehck any row will return
-        if ($user_data && $useremail == $user_data["UserEmail"]) {
+        if ($user_data && $useremail == $user_data["USEREMAIL"]) {
 
-            if ($userpassword == $user_data["UserPassword"]) {
-                setcookie("loggedin", $userpassword, 0, "/", "localhost", true, false);
+            if ($userpassword == $user_data["USERPASSWORD"]) {
+                setcookie("userloggedin", $user_data["USERID"], 0, "/", "localhost", true, false);
                 echo "<script>
                 alert('Welcome back !'); 
                 window.location.href='../index.php';
@@ -91,14 +91,14 @@ if (isset($_COOKIE["loggedin"])) {
                                 <div class="m-5 w-md-100">
                                     <label for="exampleInputEmail1" class="form-label">Email address</label><br>
                                     <input type="email"
-                                        class="form-control <?php echo (isset($useremail) && !empty($useremail)) ? (($user_data && $useremail == $user_data["UserEmail"]) ? 'is-valid' : 'is-invalid') : ''; ?>" name="useremail" id="useremail" aria-describedby="emailHelp" value="<?php echo isset($useremail) && !empty($useremail) ? $useremail : ''; ?>" required>
+                                        class="form-control <?php echo (isset($useremail) && !empty($useremail)) ? (($user_data && $useremail == $user_data["USEREMAIL"]) ? 'is-valid' : 'is-invalid') : ''; ?>" name="useremail" id="useremail" aria-describedby="emailHelp" value="<?php echo isset($useremail) && !empty($useremail) ? $useremail : ''; ?>" required>
                                     <span class="error">
                                         <?php echo isset($errors["useremail"]) ? $errors["useremail"] : ''; ?>
                                     </span>
                                 </div>
                                 <div class="m-5 w-md-100">
                                     <label for="exampleInputPassword1" class="form-label">Password</label>
-                                    <input type="password" class="form-control <?php echo (isset($userpassword) && !empty($userpassword)) ? (($user_data && $userpassword == $user_data["UserPassword"] && $useremail == $user_data["UserEmail"]) ? 'is-valid' : 'is-invalid'):''; ?>" name="userpassword" id="userpassword" value="<?php echo isset($userpassword) && !empty($userpassword) ? $userpassword : ''; ?>" required>
+                                    <input type="password" class="form-control <?php echo (isset($userpassword) && !empty($userpassword)) ? (($user_data && $userpassword == $user_data["USERPASSWORD"] && $useremail == $user_data["USERPASSWORD"]) ? 'is-valid' : 'is-invalid'):''; ?>" name="userpassword" id="userpassword" value="<?php echo isset($userpassword) && !empty($userpassword) ? $userpassword : ''; ?>" required>
                                     <span class="error">
                                         <?php echo isset($errors["userpassword"]) ? $errors["userpassword"] : ''; ?>
                                     </span>

@@ -3,7 +3,7 @@
 $server = 'localhost';
 $user = 'root';
 $pass = '';
-$name = 'websystemassignments';
+$name = 'flower';
 
 $connection = mysqli_connect($server, $user, $pass, $name);
 
@@ -13,4 +13,5 @@ if (!$connection) {
 
 
 
-?>
+
+

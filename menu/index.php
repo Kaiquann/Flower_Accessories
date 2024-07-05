@@ -5,9 +5,14 @@ $page_title = 'Menu';
 <html lang="en">
 
 <head>
-    <?php include "../assets/imports/header.php"; ?>
+    <?php include "../assets/imports/dbConfig.php";
+    include "../assets/imports/header.php";
+    include '../assets/imports/FileUtilities.php';
+    ?>
 </head>
-
+<?php
+$user_query = mysqli_query($connection, "SELECT * FROM products");
+?>
 
 <body>
     <?php include "../assets/imports/navigation.php"; ?>
@@ -44,7 +49,7 @@ $page_title = 'Menu';
             <div class="container-fluid">
                 <div class="row justify-content-center align-items-center">
                     <div class="m-5 col-12 col-xl-6 col-xxl-5">
-                        <div class="d-block p-5  sec2_content"  style="animation:bounce 2s">
+                        <div class="d-block p-5  sec2_content" style="animation:bounce 2s">
                             <h1>Want to be member ?</h1><br>
                             <p>With our state-of-the-art content management and delivery system placing content orders
                                 has never been faster and easier. You can order content in multiple languages in just
@@ -54,7 +59,10 @@ $page_title = 'Menu';
                             </p>
                         </div>
                     </div>
-                    <div class="col-12 col-xl-6 col-xxl-5 d-flex align-content-center justify-content-center">
+                    <?php
+                    if (!isset($_COOKIE["userloggedin"])||empty($_COOKIE["userloggedin"])) {
+                        if (!chkCookies($connection)) {
+                            echo '<div class="col-12 col-xl-6 col-xxl-5 d-flex align-content-center justify-content-center">
                         <div class="m-5 p-5 d-block text-center sec2_box">
                             <h1>Premium</h1>
                             <ul>
@@ -63,10 +71,16 @@ $page_title = 'Menu';
                                 <li>Share valuable content</li>
                                 <li>Create an online community</li>
                             </ul>
-                            <a href="../account/login"><button class="m-2 px-4 py-2 sec2_btn"><strong>Login</strong></button></a>
-                            <a href="../account/register"><button class="m-2 px-4 py-2 sec2_btn"><strong>Sign up</strong></button></a>
+                            <a href="../account/login"><button
+                                    class="m-2 px-4 py-2 sec2_btn"><strong>Login</strong></button></a>
+                            <a href="../account/register"><button class="m-2 px-4 py-2 sec2_btn"><strong>Sign
+                                        up</strong></button></a>
                         </div>
-                    </div>
+                    </div>';
+                        }
+                    }
+                    ?>
+
                 </div>
             </div>
         </section>
@@ -88,45 +102,37 @@ $page_title = 'Menu';
 
                     <div class="my-5 col-12 col-xxl-12">
                         <div class="row">
-                            <div class="col-6 col-xl-3 col-xxl-3">
-                                <a href="#" class="chair row1-chair1">
-                                    <div class="p-2">
-                                        <img src="../images/sec2_img.png" class="img-fluid w-100">
-                                    </div>
-                                    <p class="text-center"><strong>Nordic chair<br>$50.00</strong></p>
-                                </a>
-                            </div>
-                            <div class="col-6 col-xl-3 col-xxl-3">
-                                <a href="#" class="chair row1-chair2">
-                                    <div class="p-2">
-                                        <img src="../images/sec2_img2.png" class="img-fluid w-100">
-                                    </div>
-                                    <p class="text-center"><strong>Nordic chair<br>$78.00</strong></p>
-                                </a>
-                            </div>
-                            <div class="col-6 col-xl-3 col-xxl-3">
-                                <a href="#" class="chair row1-chair3">
-                                    <div class="p-2">
-                                        <img src="../images/sec2_img3.png" class="img-fluid w-100">
-                                    </div>
-                                    <p class="text-center"><strong>Nordic chair<br>$43.00</strong></p>
-                                </a>
-                            </div>
+                            <!-- <div class="col-6 col-xl-3 col-xxl-3">
+                                <a href="#" class="chair row1-chair1"> -->
+                            <?php
 
-                            <div class="col-6 col-xl-3 col-xxl-3">
-                                <a href="#" class="chair row1-chair3">
-                                    <div class="p-2">
-                                        <img src="../images/sec2_img3.png" class="img-fluid w-100">
-                                    </div>
-                                    <p class="text-center"><strong>Nordic chair<br>$43.00</strong></p>
-                                </a>
-                            </div>
+                            if ($user_query) {
+                                while ($row = mysqli_fetch_assoc($user_query)) {
+                                    $imageData = base64_encode($row['image']);
+                                    $src = 'data:image/jpeg;base64,' . $imageData;
+                                    echo '  <div class="col-6 col-xl-3 col-xxl-3">
+                                                    <a href="#" class="chair row1-chair1">
+                                                        <div class="p-2">
+                                                            <img src=' . $src . ' class="img-fluid w-100">
+                                                        </div>
+                                                        <p class="text-center"><strong>';
+                                    // Process each row
+                                    echo $row['name'] . "<br>" . $row['price'] . "</strong></p>
+                                                    </a>
+                                                    </div>";
+                                }
+                            }
+                            ?>
+                            <!-- </a>
+                            </div> -->
+
+
 
                         </div>
                     </div>
 
 
-                    <div class="col-12 col-xxl-12">
+                    <!-- <div class="col-12 col-xxl-12">
                         <div class="row">
                             <div class="col-6 col-xl-3 col-xxl-3">
                                 <a href="#" class="chair row1-chair1">
@@ -163,10 +169,10 @@ $page_title = 'Menu';
                             </div>
 
                         </div>
-                    </div>
+                    </div> -->
 
 
-                    <div class="my-5 col-12 col-xxl-12">
+                    <!-- <div class="my-5 col-12 col-xxl-12">
                         <div class="row">
                             <div class="col-6 col-xl-3 col-xxl-3">
                                 <a href="#" class="chair row1-chair1">
@@ -203,12 +209,12 @@ $page_title = 'Menu';
                             </div>
 
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </section>
 
-       
+
 
     </main>
 
