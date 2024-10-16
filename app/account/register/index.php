@@ -3,9 +3,10 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
-require '../../PHPMailer/src/Exception.php';
-require '../../PHPMailer/src/PHPMailer.php';
-require '../../PHPMailer/src/SMTP.php';
+require '../../vendor/phpmailer/phpmailer/src/Exception.php';
+require '../../vendor/phpmailer/phpmailer/src/PHPMailer.php';
+require '../../vendor/phpmailer/phpmailer/src/SMTP.php';
+require '../../lib/Mailer.php';
 require "../../assets/imports/dbConfig.php";
 require_once '../../assets/imports/FileUtilities.php';
 
@@ -111,7 +112,7 @@ if (isset($_POST["submit"])) {
         {
             $comment = " This is your OTP code :" . $otp;
 
-            mail($useremail, "OTP", $comment);
+            sendEmail($useremail, "OTP", $comment);
         }
         // Generate OTP
         $otp = generateOTP();
