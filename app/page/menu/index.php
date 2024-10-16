@@ -1,24 +1,9 @@
 <?php
-$page_title = 'Menu';
-?>
-<!doctype html>
-<html lang="en">
 
-<head>
-    <?php include "../assets/imports/dbConfig.php";
-    include "../assets/imports/header.php";
-    include '../assets/imports/FileUtilities.php';
-    ?>
-</head>
-<?php
-$user_query = mysqli_query($connection, "SELECT * FROM products");
+// $user_query = mysqli_query($connection, "SELECT * FROM products");
 ?>
 
 <body>
-    <?php include "../assets/imports/navigation.php"; ?>
-    <title>
-        <?php echo $page_title; ?>
-    </title>
     <main id="main">
         <section class="section1">
             <div class="container">
@@ -60,9 +45,8 @@ $user_query = mysqli_query($connection, "SELECT * FROM products");
                         </div>
                     </div>
                     <?php
-                    if (!isset($_COOKIE["userloggedin"])||empty($_COOKIE["userloggedin"])) {
-                        if (!chkCookies($connection)) {
-                            echo '<div class="col-12 col-xl-6 col-xxl-5 d-flex align-content-center justify-content-center">
+                    if (!isLoggedIn()) {
+                        echo '<div class="col-12 col-xl-6 col-xxl-5 d-flex align-content-center justify-content-center">
                         <div class="m-5 p-5 d-block text-center sec2_box">
                             <h1>Premium</h1>
                             <ul>
@@ -77,7 +61,6 @@ $user_query = mysqli_query($connection, "SELECT * FROM products");
                                         up</strong></button></a>
                         </div>
                     </div>';
-                        }
                     }
                     ?>
 
@@ -102,123 +85,86 @@ $user_query = mysqli_query($connection, "SELECT * FROM products");
 
                     <div class="my-5 col-12 col-xxl-12">
                         <div class="row">
-                            <!-- <div class="col-6 col-xl-3 col-xxl-3">
-                                <a href="#" class="chair row1-chair1"> -->
+                            <div class="col-6 col-xl-3 col-xxl-3">
+                                <?php
+                                     $products = db_select_all('products');
+                                    foreach($products as $product){
+                                ?>
+                                <a href="#" class="chair row1-chair1">
+                                    <div class="p-2">
+                                        <img src=' . $src . ' class="img-fluid w-100">
+                                    </div>
+                                    <p class="text-center"><strong><?php $product->name ?></strong></p>
+                                    <p class="text-center"><strong><?php $product->price ?></strong></p>
+                                </a>
+                            </div>
                             <?php
-
-                            if ($user_query) {
-                                while ($row = mysqli_fetch_assoc($user_query)) {
-                                    $imageData = base64_encode($row['image']);
-                                    $src = 'data:image/jpeg;base64,' . $imageData;
-                                    echo '  <div class="col-6 col-xl-3 col-xxl-3">
-                                                    <a href="#" class="chair row1-chair1">
-                                                        <div class="p-2">
-                                                            <img src=' . $src . ' class="img-fluid w-100">
-                                                        </div>
-                                                        <p class="text-center"><strong>';
-                                    // Process each row
-                                    echo $row['name'] . "<br>" . $row['price'] . "</strong></p>
-                                                    </a>
-                                                    </div>";
-                                }
-                            }
+                                    }
                             ?>
-                            <!-- </a>
-                            </div> -->
-
-
-
                         </div>
                     </div>
-
-
-                    <!-- <div class="col-12 col-xxl-12">
-                        <div class="row">
-                            <div class="col-6 col-xl-3 col-xxl-3">
-                                <a href="#" class="chair row1-chair1">
-                                    <div class="p-2">
-                                        <img src="../images/sec2_img.png" class="img-fluid w-100">
-                                    </div>
-                                    <p class="text-center"><strong>Nordic chair<br>$50.00</strong></p>
-                                </a>
-                            </div>
-                            <div class="col-6 col-xl-3 col-xxl-3">
-                                <a href="#" class="chair row1-chair2">
-                                    <div class="p-2">
-                                        <img src="../images/sec2_img2.png" class="img-fluid w-100">
-                                    </div>
-                                    <p class="text-center"><strong>Nordic chair<br>$78.00</strong></p>
-                                </a>
-                            </div>
-                            <div class="col-6 col-xl-3 col-xxl-3">
-                                <a href="#" class="chair row1-chair3">
-                                    <div class="p-2">
-                                        <img src="../images/sec2_img3.png" class="img-fluid w-100">
-                                    </div>
-                                    <p class="text-center"><strong>Nordic chair<br>$43.00</strong></p>
-                                </a>
-                            </div>
-
-                            <div class="col-6 col-xl-3 col-xxl-3">
-                                <a href="#" class="chair row1-chair3">
-                                    <div class="p-2">
-                                        <img src="../images/sec2_img3.png" class="img-fluid w-100">
-                                    </div>
-                                    <p class="text-center"><strong>Nordic chair<br>$43.00</strong></p>
-                                </a>
-                            </div>
-
-                        </div>
-                    </div> -->
-
-
-                    <!-- <div class="my-5 col-12 col-xxl-12">
-                        <div class="row">
-                            <div class="col-6 col-xl-3 col-xxl-3">
-                                <a href="#" class="chair row1-chair1">
-                                    <div class="p-2">
-                                        <img src="../images/sec2_img.png" class="img-fluid w-100">
-                                    </div>
-                                    <p class="text-center"><strong>Nordic chair<br>$50.00</strong></p>
-                                </a>
-                            </div>
-                            <div class="col-6 col-xl-3 col-xxl-3">
-                                <a href="#" class="chair row1-chair2">
-                                    <div class="p-2">
-                                        <img src="../images/sec2_img2.png" class="img-fluid w-100">
-                                    </div>
-                                    <p class="text-center"><strong>Nordic chair<br>$78.00</strong></p>
-                                </a>
-                            </div>
-                            <div class="col-6 col-xl-3 col-xxl-3">
-                                <a href="#" class="chair row1-chair3">
-                                    <div class="p-2">
-                                        <img src="../images/sec2_img3.png" class="img-fluid w-100">
-                                    </div>
-                                    <p class="text-center"><strong>Nordic chair<br>$43.00</strong></p>
-                                </a>
-                            </div>
-
-                            <div class="col-6 col-xl-3 col-xxl-3">
-                                <a href="#" class="chair row1-chair3">
-                                    <div class="p-2">
-                                        <img src="../images/sec2_img3.png" class="img-fluid w-100">
-                                    </div>
-                                    <p class="text-center"><strong>Nordic chair<br>$43.00</strong></p>
-                                </a>
-                            </div>
-
-                        </div>
-                    </div> -->
                 </div>
             </div>
         </section>
-
-
-
     </main>
-
-    <?php include "../assets/imports/footer.php"; ?>
 </body>
 
-</html>
+<style>
+    .section1 {
+        background-color: #d9d9e1;
+    }
+
+    a {
+        text-decoration: none;
+        color: black;
+    }
+
+    .chair,
+    .chair::before {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 20px;
+        transition: all 0.5s ease;
+    }
+
+    .chair {
+        position: relative;
+        border: none;
+        animation: fadeInLeftBig 3s;
+    }
+
+    .chair::before {
+        content: '';
+        position: absolute;
+        background-color: #d9d9e1;
+        opacity: 0;
+        transform: translateY(0px);
+        z-index: -1;
+    }
+
+    .chair:hover::before {
+        transform: translateY(20px);
+        opacity: 1;
+    }
+
+    .sec2_box {
+        background-color: #343333;
+        color: #d9d9e1;
+        max-height: 400px;
+        border: solid black 2px;
+        border-radius: 20px;
+        animation: pulse 2S infinite;
+    }
+
+    .sec2_btn {
+        background-color: #d9d9e1;
+        border-radius: 20px;
+
+    }
+
+    .sec2_btn:hover {
+        background-color: #343333;
+        color: #d9d9e1;
+    }
+</style>

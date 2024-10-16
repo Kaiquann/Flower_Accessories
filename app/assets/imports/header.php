@@ -4,6 +4,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
 
+<head>
+  <div id="info"><?= temp('info') ?></div>
+  <div id="success"><?= temp('success') ?></div>
+  <div id="warning"><?= temp('warning') ?></div>
+  <div id="danger"><?= temp('danger') ?></div>
+</head>
 <nav class="navbar navbar-expand-lg" style="box-shadow: 2px 2px 5px;">
   <div class="container-fluid">
     <a href="/index.php" class="navbar-brand">
@@ -38,15 +44,15 @@
   .nav-item {
     padding: px;
     border-radius: 8px;
-  
+
   }
-  
+
   .nav-item.active,
   .nav-item:hover {
     background-color: rgb(141, 135, 135);
     transition: all 1s;
   }
-  
+
   .nav-item:hover a.nav-link {
     color: white;
     text-shadow: white 1px 1px;
