@@ -9,7 +9,7 @@ const SENDER_EMAIL  = 'no-reply@kqyl.uk';
 const SMTP_HOST     = 'smtp-relay.brevo.com';
 const SMTP_PORT     = 587;
 const SMTP_USERNAME = '7d61c3001@smtp-brevo.com';
-const SMTP_PASSWORD = '03wzjRNE7yBLFVxZ';
+const SMTP_PASSWORD = '43CHRDyd7rsjIP9h';
 
 $mail = new PHPMailer(true);
 $mail->isSMTP();

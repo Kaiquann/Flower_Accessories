@@ -1,3 +1,4 @@
 <?php
-header('location: main');
+require '_base.php';
+require '_routes.php';
 ?>
